@@ -2,7 +2,7 @@ name: Zoom recordings to Drive
 
 # Each batch is copied a while after its class ends (times in IST):
 #   Playwright weekend  (class 10:30 AM) -> 3:00 PM   = 09:30 UTC
-#   Playwright weekday  (class  4:30 PM) -> 7:30 PM   = 14:00 UTC
+#   Playwright weekday  (class  4:30 PM) -> 7:35 PM   = 14:05 UTC
 #   AI/ML               (class  7:00 PM) -> 10:00 PM  = 16:30 UTC
 # Runs every day; on days without a class it finds nothing and finishes in seconds.
 # Each run also re-checks the previous 2 days, so a recording Zoom hadn't finished
@@ -11,7 +11,7 @@ name: Zoom recordings to Drive
 on:
   schedule:
     - cron: "30 9 * * *"
-    - cron: "0 14 * * *"
+    - cron: "5 14 * * *"
     - cron: "30 16 * * *"
   workflow_dispatch:
     inputs:
@@ -42,7 +42,7 @@ jobs:
           ONLY_BATCH: >-
             ${{ github.event_name == 'workflow_dispatch' && inputs.batch
              || github.event.schedule == '30 9 * * *' && 'pw-weekend'
-             || github.event.schedule == '0 14 * * *' && 'pw-weekday'
+             || github.event.schedule == '5 14 * * *' && 'pw-weekday'
              || github.event.schedule == '30 16 * * *' && 'ai'
              || 'all' }}
           DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || 'false' }}

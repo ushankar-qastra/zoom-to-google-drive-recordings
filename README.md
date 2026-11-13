@@ -12,7 +12,7 @@ Batches (already set in `config.json`):
 | Batch (key) | Class | Copied at (IST) | Zoom meeting | Host | Drive folder |
 |---|---|---|---|---|---|
 | Playwright weekend (`pw-weekend`) | Sat–Sun 10:30 AM | 3:00 PM | 870 2113 9509 | uday@moventai.com | Playwright Batch 17th Oct weekend recordings |
-| Playwright weekday (`pw-weekday`) | Mon, Tue, Thu, Fri 4:30 PM | 7:30 PM | 839 3892 6362 | uday@moventai.com | Playwright Batch 13th Oct weekday recordings |
+| Playwright weekday (`pw-weekday`) | Mon, Tue, Thu, Fri 4:30 PM | 7:35 PM | 839 3892 6362 | uday@moventai.com | Playwright Batch 13th Oct weekday recordings |
 | AI/ML (`ai`) | Mon–Fri 7:00 PM | 10:00 PM | 831 5061 5801 | takmogevijay99@gmail.com (Vijay) | AI Batch 5th October Recordings |
 
 Each batch's run happens every day at its time; on days without a class it finds nothing. Each run also re-checks the previous 2 days, so if Zoom was still processing a recording, the next run picks it up. To change a time, edit the `cron` lines in `.github/workflows/zoom-to-drive.yml` (times there are UTC = IST − 5:30).
