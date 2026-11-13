@@ -45,6 +45,12 @@ def log(msg):
 def load_config():
     with open(os.path.join(os.path.dirname(__file__), "config.json")) as f:
         cfg = json.load(f)
+    # ONLY_BATCH=pw-weekday (etc.) limits a run to one batch; empty = all batches
+    only = os.environ.get("ONLY_BATCH", "").strip()
+    if only and only != "all":
+        cfg["batches"] = [b for b in cfg["batches"] if b["key"] == only]
+        if not cfg["batches"]:
+            raise SystemExit(f"No batch with key '{only}' in config.json")
     by_id = {}
     for b in cfg["batches"]:
         mid = str(b["meeting_id"]).replace(" ", "")

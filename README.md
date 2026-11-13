@@ -4,16 +4,18 @@ Two scheduled jobs on GitHub Actions:
 
 | Job | When | What it does |
 |---|---|---|
-| Zoom recordings to Drive | Daily, 6:00 AM IST | Copies the last 2 days' Zoom cloud recordings into each batch's Drive folder, in a new `DayN - DD/MM/YYYY` folder |
+| Zoom recordings to Drive | Daily, once per batch (see below) | Copies that batch's Zoom cloud recordings into its Drive folder, in a new `DayN - DD/MM/YYYY` folder |
 | Weekly recordings summary | Monday, 7:00 AM IST | Emails uday@moventai.com what each batch got last week and flags anything missing |
 
 Batches (already set in `config.json`):
 
-| Batch | Zoom meeting | Host | Drive folder |
-|---|---|---|---|
-| AI Batch 5th October | 831 5061 5801 | takmogevijay99@gmail.com (Vijay) | AI Batch 5th October Recordings |
-| Playwright weekday | 839 3892 6362 | uday@moventai.com | Playwright Batch 13th Oct weekday recordings |
-| Playwright weekend | 870 2113 9509 | uday@moventai.com | Playwright Batch 17th Oct weekend recordings |
+| Batch (key) | Class | Copied at (IST) | Zoom meeting | Host | Drive folder |
+|---|---|---|---|---|---|
+| Playwright weekend (`pw-weekend`) | Sat–Sun 10:30 AM | 3:00 PM | 870 2113 9509 | uday@moventai.com | Playwright Batch 17th Oct weekend recordings |
+| Playwright weekday (`pw-weekday`) | Mon, Tue, Thu, Fri 4:30 PM | 7:30 PM | 839 3892 6362 | uday@moventai.com | Playwright Batch 13th Oct weekday recordings |
+| AI/ML (`ai`) | Mon–Fri 7:00 PM | 10:00 PM | 831 5061 5801 | takmogevijay99@gmail.com (Vijay) | AI Batch 5th October Recordings |
+
+Each batch's run happens every day at its time; on days without a class it finds nothing. Each run also re-checks the previous 2 days, so if Zoom was still processing a recording, the next run picks it up. To change a time, edit the `cron` lines in `.github/workflows/zoom-to-drive.yml` (times there are UTC = IST − 5:30).
 
 How it behaves:
 - New day folders continue your numbering (highest DayN + 1). If a folder for that date already exists, the video goes into it.
@@ -86,7 +88,7 @@ Mac/Windows often hide the `.github` folder when dragging. If it doesn't appear 
 
 ## 5. Test
 
-1. **Actions** tab → **Zoom recordings to Drive** → **Run workflow**, *Dry run* ticked → open the run log. It lists what it would copy and which folders it would create.
+1. **Actions** tab → **Zoom recordings to Drive** → **Run workflow**, batch *all*, *Dry run* ticked → open the run log. It lists what it would copy and which folders it would create.
 2. Run again with *Dry run* unticked for a real copy.
 3. **Weekly recordings summary** → Run workflow with *Dry run* ticked to see the email text in the log; untick to get a real email.
 

@@ -2,7 +2,7 @@ name: Weekly recordings summary
 
 on:
   schedule:
-    - cron: "30 1 * * 1"   # 01:30 UTC Monday = 7:00 AM IST, after the 6 AM copy
+    - cron: "30 1 * * 1"   # 01:30 UTC Monday = 7:00 AM IST
   workflow_dispatch:
     inputs:
       dry_run:

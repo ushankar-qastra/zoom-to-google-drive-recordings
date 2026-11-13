@@ -6,18 +6,21 @@
   "summary_email_to": "uday@moventai.com",
   "batches": [
     {
+      "key": "ai",
       "name": "AI Batch 5th October",
       "meeting_id": "831 5061 5801",
       "zoom_host": "takmogevijay99@gmail.com",
       "drive_folder_id": "1JVvVX4NGE_uKr7on_XqBBqbcyad3Y3LD"
     },
     {
+      "key": "pw-weekday",
       "name": "Playwright Batch 13th Oct weekday",
       "meeting_id": "839 3892 6362",
       "zoom_host": "uday@moventai.com",
       "drive_folder_id": "16Pw53EeVQjsP2aChmmwCPnO0Ev8avSh8"
     },
     {
+      "key": "pw-weekend",
       "name": "Playwright Batch 17th Oct weekend",
       "meeting_id": "870 2113 9509",
       "zoom_host": "uday@moventai.com",
