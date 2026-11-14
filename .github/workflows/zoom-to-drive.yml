@@ -4,6 +4,8 @@ name: Zoom recordings to Drive
 #   Playwright weekend  (class 10:30 AM) -> 3:00 PM   = 09:30 UTC
 #   Playwright weekday  (class  4:30 PM) -> 7:35 PM   = 14:05 UTC
 #   AI/ML               (class  7:00 PM) -> 10:00 PM  = 16:30 UTC
+# The exact-time trigger comes from cron-job.org (see README, "Exact timing").
+# These GitHub schedules stay as a backup: GitHub may start them late or skip them.
 # Runs every day; on days without a class it finds nothing and finishes in seconds.
 # Each run also re-checks the previous 2 days, so a recording Zoom hadn't finished
 # processing yet is picked up by the next run.
@@ -29,8 +31,16 @@ jobs:
   copy:
     runs-on: ubuntu-latest
     timeout-minutes: 120
+    # One run per batch at a time. If cron-job.org and GitHub's own (backup)
+    # schedule both start the same batch, the second waits for the first,
+    # then finds the video already in Drive and skips it.
     concurrency:
-      group: copy-${{ github.event.schedule || inputs.batch }}
+      group: copy-${{ github.event_name == 'workflow_dispatch' && inputs.batch
+        || github.event.schedule == '30 9 * * *' && 'pw-weekend'
+        || github.event.schedule == '5 14 * * *' && 'pw-weekday'
+        || github.event.schedule == '30 16 * * *' && 'ai'
+        || 'all' }}
+      cancel-in-progress: false
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

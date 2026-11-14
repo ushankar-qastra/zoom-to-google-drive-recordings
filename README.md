@@ -102,3 +102,36 @@ After that both run on schedule. GitHub can start scheduled runs 10–30 min lat
 - `delete_from_zoom_after_upload` — `false`. Set `true` later to move the Zoom cloud copy to Zoom trash after upload (recoverable for 30 days) and free Zoom storage. Needs the extra Zoom scope.
 - `summary_email_to` — who gets the Monday email.
 - New batch: add a block with its name, meeting ID, host email and Drive folder ID.
+
+## Exact timing with cron-job.org (recommended)
+
+GitHub's own scheduler can start runs hours late or skip them. cron-job.org (free) calls GitHub at the exact minute instead. GitHub's schedules stay on as a backup; running a batch twice is safe.
+
+**1. GitHub token** (lets cron-job.org start the workflow, nothing else)
+1. https://github.com/settings/personal-access-tokens/new (Fine-grained token)
+2. Name `cron-job.org`, expiration: the longest offered (note the date; renew before then).
+3. Repository access: **Only select repositories** → `zoom-to-google-drive-recordings`.
+4. Permissions → Repository permissions → **Actions: Read and write**. Nothing else.
+5. Generate, copy the token (starts with `github_pat_`). Keep it only in cron-job.org.
+
+**2. cron-job.org jobs** — sign up at https://cron-job.org, then **Create cronjob** four times:
+
+| Title | Schedule (Asia/Kolkata) | Workflow file | Body |
+|---|---|---|---|
+| Recordings – PW weekend | Every day 15:00 | `zoom-to-drive.yml` | `{"ref":"main","inputs":{"batch":"pw-weekend","dry_run":"false"}}` |
+| Recordings – PW weekday | Every day 19:35 | `zoom-to-drive.yml` | `{"ref":"main","inputs":{"batch":"pw-weekday","dry_run":"false"}}` |
+| Recordings – AI/ML | Every day 22:00 | `zoom-to-drive.yml` | `{"ref":"main","inputs":{"batch":"ai","dry_run":"false"}}` |
+| Recordings – weekly summary | Mondays 07:00 | `weekly-summary.yml` | `{"ref":"main","inputs":{"dry_run":"false"}}` |
+
+For each job:
+- **URL:** `https://api.github.com/repos/ushankar-qastra/zoom-to-google-drive-recordings/actions/workflows/WORKFLOW_FILE/dispatches` (put the workflow file from the table in place of `WORKFLOW_FILE`)
+- **Schedule:** Custom → set the time; time zone **Asia/Kolkata**.
+- **Advanced** tab:
+  - Request method: **POST**
+  - Headers:
+    - `Authorization` = `Bearer github_pat_...` (your token)
+    - `Accept` = `application/vnd.github+json`
+    - `X-GitHub-Api-Version` = `2022-11-28`
+    - `Content-Type` = `application/json`
+  - Request body: the Body from the table.
+- Save, then use **Test run**. A good result is HTTP status **204**, and a new run appears in the repo's Actions tab within a few seconds.
